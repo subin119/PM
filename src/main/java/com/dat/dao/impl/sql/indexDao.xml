@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="indexDao">
+	
+	<resultMap type="PositionVO" id="PositionVO">
+		<result column="POSITION_ID" property="positionId"/>
+		<result column="POSITION_NM" property="positionName"/>
+	</resultMap>
+	
+	<resultMap type="DepartmentVO" id="DepartmentVO">
+		<result column="DEPARTMENT_ID" property="departmentId"/>
+		<result column="DEPARTMENT_NM" property="departmentName"/>
+	</resultMap>
+	
+	<resultMap type="EmployeeVO" id="EmployeeVO">
+		<result column="EMPLOYEE_ID" property="employeeId" />
+		<result column="POSITION_ID" property="positionId" />
+		<result column="NAME" property="name" />
+		<result column="JOB_ID" property="jobId" />
+		<result column="DEPARTMENT_ID" property="departmentId" />
+		<result column="SALARY" property="salary" />
+		<collection property="positionVO" resultMap="PositionVO" />
+		<collection property="departmentVO" resultMap="DepartmentVO" />
+	</resultMap>
+	
+	<select id="getAllEmployees"
+			resultMap="EmployeeVO">
+		SELECT	/* [indexDao.xml][getAllEmployees] */
+				E.EMPLOYEE_ID
+				, E.NAME
+				, E.JOB_ID
+				, P.POSITION_NM
+				, D.DEPARTMENT_NM
+				, E.SALARY
+		FROM	EMPLOYEE E
+				, POSITION P
+				, DEPARTMENT D
+		WHERE	E.DEPARTMENT_ID = D.DEPARTMENT_ID(+)
+		AND		E.POSITION_ID = P.POSITION_ID
+		ORDER BY 	E.EMPLOYEE_ID
+	</select>
+	
+	<insert id="addNewEmployee"
+			parameterType="EmployeeVO">
+		INSERT INTO /* [indexDao.xml][doAddNewEmployee] */
+					EMPLOYEE (
+		   						EMPLOYEE_ID
+		   						, NAME
+		   						, POSITION_ID
+		   						, JOB_ID
+		   						, SALARY
+		   						, DEPARTMENT_ID
+		   					 ) 
+		VALUES		( 
+						EMPLOYEE_ID_SEQ.NEXTVAL
+						, #{name}
+						, 12
+						, #{jobId}
+						, #{salary}
+						, 1
+					)	
+	</insert>
+	
+	<select id="getEmployeeById"
+			resultMap="EmployeeVO"
+			parameterType="string">
+		SELECT	/* [indexDao.xml][getEmployeeById] */
+				E.EMPLOYEE_ID
+				, E.NAME
+				, E.JOB_ID
+				, P.POSITION_NM
+				, D.DEPARTMENT_NM
+				, E.SALARY
+		FROM	EMPLOYEE E
+				, POSITION P
+				, DEPARTMENT D
+		WHERE	E.DEPARTMENT_ID = D.DEPARTMENT_ID(+)
+		AND		E.POSITION_ID = P.POSITION_ID
+		AND		E.EMPLOYEE_ID = #{employeeId}
+		ORDER BY 	E.EMPLOYEE_ID
+	</select>
+	
+	<delete id="deleteEmployeeById"
+			parameterType="string">
+		DELETE	/* [indexDao.xml][deleteEmployeeById] */
+		FROM	EMPLOYEE
+		WHERE	EMPLOYEE_ID = #{employeeId}	
+	</delete>
+	
+	<update id="promoteEmployee"
+			parameterType="string">
+		UPDATE	/* [indexDao.xml][promoteEmployee] */
+				EMPLOYEE
+		SET		POSITION_ID = POSITION_ID - 1
+		WHERE	EMPLOYEE_ID = #{employeeId}		
+	</update>
+	
+	<select id="getAllDepartments"
+			resultType="DepartmentVO">
+		SELECT	/* [indexDao.xml][getAllDepartments] */
+				DEPARTMENT_ID	departmentId
+				, DEPARTMENT_NM departmentName
+		FROM	DEPARTMENT
+		ORDER BY DEPARTMENT_ID
+	</select>
+	
+	<insert id="addNewDepartment"
+			parameterType="DepartmentVO">
+		INSERT INTO	/* [indexDao.xml][addNewDepartment] */
+					DEPARTMENT 	(
+									DEPARTMENT_ID
+									, DEPARTMENT_NM
+   								) 
+		VALUES 		( 
+						DEPARTMENT_ID_SEQ.NEXTVAL
+						, #{departmentName}
+					)	
+	</insert>
+	
+	<select id="getDepartmentById"
+			resultType="DepartmentVO"
+			parameterType="string">
+		SELECT	/* [indexDao.xml][getDepartmentById] */
+				DEPARTMENT_ID	departmentId
+				, DEPARTMENT_NM departmentName
+		FROM	DEPARTMENT
+		WHERE	DEPARTMENT_ID = #{departmentId}
+		ORDER BY DEPARTMENT_ID
+	
+	</select>
+	
+	<delete id="deleteDepartment"
+			parameterType="string">
+		DELETE	/* [indexDao.xml][deleteDepartment] */
+		FROM	DEPARTMENT
+		WHERE	DEPARTMENT_ID = #{departmentId}
+	</delete>
+	
+	<update id="registerDepartment"
+			parameterType="map">
+		UPDATE	/* [indexDao.xml][registerDepartment] */
+				EMPLOYEE
+		SET		DEPARTMET_ID = #{departmentId}
+		WHERE	EMPLOYEE_ID = #{employeeId}
+	</update>
+</mapper>		

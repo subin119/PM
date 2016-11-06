@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-/mybatis.org//DTD Config 3.0//EN"
+						"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.dat.vo.EmployeeVO" alias="EmployeeVO"/>
+		<typeAlias type="com.dat.vo.PositionVO" alias="PositionVO"/>
+		<typeAlias type="com.dat.vo.DepartmentVO" alias="DepartmentVO"/>
+	</typeAliases>
+	<mappers>
+		<mapper	resource="com/dat/dao/impl/sql/indexDao.xml"/>
+	</mappers>
+</configuration>						
